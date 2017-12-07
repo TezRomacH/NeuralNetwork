@@ -1,10 +1,10 @@
 """
-A loss function measures how good our predictions are,
-we can use this to adjust the parameters of our network
+Loss function
 """
 import numpy as np
 
-from joelnet.tensor import Tensor
+from tezromach.tensor import Tensor
+
 
 class Loss:
     def loss(self, predicted: Tensor, actual: Tensor) -> float:
@@ -16,9 +16,9 @@ class Loss:
 
 class MSE(Loss):
     """
-    MSE is mean squared error, although we're
-    just going to do total squared error
+    sum( (predicted - y)^2 )
     """
+
     def loss(self, predicted: Tensor, actual: Tensor) -> float:
         return np.sum((predicted - actual) ** 2)
 

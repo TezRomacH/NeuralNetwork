@@ -4,9 +4,8 @@ learned with a simple linear model is XOR
 """
 import numpy as np
 
-from joelnet.train import train
-from joelnet.nn import NeuralNet
-from joelnet.layers import Linear, Tanh
+from tezromach.network import NeuralNet
+from tezromach.layers import Linear, Sigmoid
 
 inputs = np.array([
     [0, 0],
@@ -16,20 +15,20 @@ inputs = np.array([
 ])
 
 targets = np.array([
-    [1, 0],
-    [0, 1],
-    [0, 1],
-    [1, 0]
+    [0],
+    [1],
+    [1],
+    [0]
 ])
 
 net = NeuralNet([
     Linear(input_size=2, output_size=2),
-    Tanh(),
-    Linear(input_size=2, output_size=2)
+    Sigmoid(),
+    Linear(input_size=2, output_size=1)
 ])
 
-train(net, inputs, targets)
+net.fit(inputs, targets, num_epochs=10000, learning_rate=0.02)
 
 for x, y in zip(inputs, targets):
-    predicted = net.forward(x)
+    predicted = net.predict(x)
     print(x, predicted, y)

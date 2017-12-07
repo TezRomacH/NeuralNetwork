@@ -1,16 +1,13 @@
-"""
-Our neural nets will be made up of layers.
-Each layer needs to pass its inputs forward
-and propagate gradients backward. For example,
-a neural net might look like
-
-inputs -> Linear -> Tanh -> Linear -> output
+""" 
+Layers:
+* Linear
+* Tanh Activation
+* Sigmoid Activation
 """
 from typing import Dict, Callable
 
 import numpy as np
-
-from joelnet.tensor import Tensor
+from tezromach.tensor import Tensor
 
 
 class Layer:
@@ -35,6 +32,7 @@ class Linear(Layer):
     """
     computes output = inputs @ w + b
     """
+
     def __init__(self, input_size: int, output_size: int) -> None:
         # inputs will be (batch_size, input_size)
         # outputs will be (batch_size, output_size)
@@ -68,15 +66,18 @@ class Linear(Layer):
 
 F = Callable[[Tensor], Tensor]
 
+
 class Activation(Layer):
     """
     An activation layer just applies a function
     elementwise to its inputs
     """
-    def __init__(self, f: F, f_prime: F) -> None:
+
+    def __init__(self, f: F, f_deriv: F) -> None:
         super().__init__()
         self.f = f
-        self.f_prime = f_prime
+        self.f_deriv = f_deriv
+        self.inputs: Tensor = []
 
     def forward(self, inputs: Tensor) -> Tensor:
         self.inputs = inputs
@@ -87,17 +88,32 @@ class Activation(Layer):
         if y = f(x) and x = g(z)
         then dy/dz = f'(x) * g'(z)
         """
-        return self.f_prime(self.inputs) * grad
+        return self.f_deriv(self.inputs) * grad
 
 
 def tanh(x: Tensor) -> Tensor:
     return np.tanh(x)
 
-def tanh_prime(x: Tensor) -> Tensor:
+
+def tanh_deriv(x: Tensor) -> Tensor:
     y = tanh(x)
     return 1 - y ** 2
 
 
 class Tanh(Activation):
     def __init__(self):
-        super().__init__(tanh, tanh_prime)
+        super().__init__(tanh, tanh_deriv)
+
+
+def sigmoid(x: Tensor) -> Tensor:
+    return 1.0 / (1.0 + np.exp(-x))
+
+
+def sigmoid_deriv(x: Tensor) -> Tensor:
+    y = sigmoid(x)
+    return y * (1 - y)
+
+
+class Sigmoid(Activation):
+    def __init__(self):
+        super().__init__(sigmoid, sigmoid_deriv)

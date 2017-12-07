@@ -1,12 +1,11 @@
 """
-We'll feed inputs into our network in batches.
-So here are some tools for iterating over data in batches.
+Iterators for NeuralNet
 """
 from typing import Iterator, NamedTuple
 
 import numpy as np
 
-from joelnet.tensor import Tensor
+from tezromach.tensor import Tensor
 
 Batch = NamedTuple("Batch", [("inputs", Tensor), ("targets", Tensor)])
 
