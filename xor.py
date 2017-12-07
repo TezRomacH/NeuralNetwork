@@ -5,7 +5,7 @@ learned with a simple linear model is XOR
 import numpy as np
 
 from tezromach.network import NeuralNet
-from tezromach.layers import Linear, Sigmoid
+from tezromach.layers import Linear, Sigmoid, Tanh
 
 inputs = np.array([
     [0, 0],
@@ -23,8 +23,9 @@ targets = np.array([
 
 net = NeuralNet([
     Linear(input_size=2, output_size=2),
-    Sigmoid(),
-    Linear(input_size=2, output_size=1)
+    Tanh(),
+    Linear(input_size=2, output_size=1),
+    Tanh()
 ])
 
 net.fit(inputs, targets, num_epochs=10000, learning_rate=0.02)

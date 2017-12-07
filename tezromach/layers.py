@@ -37,8 +37,11 @@ class Linear(Layer):
         # inputs will be (batch_size, input_size)
         # outputs will be (batch_size, output_size)
         super().__init__()
+        self.input_size = input_size
+        self.output_size = output_size
         self.params["w"] = np.random.randn(input_size, output_size)
         self.params["b"] = np.random.randn(output_size)
+        self.inputs: Tensor = []
 
     def forward(self, inputs: Tensor) -> Tensor:
         """

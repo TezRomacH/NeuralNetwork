@@ -53,4 +53,3 @@ class NeuralNet:
                 self._step(learning_rate)
             if print_debug:
                 print(epoch, epoch_loss, file=sys.stderr)
-
