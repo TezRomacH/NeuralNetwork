@@ -152,6 +152,9 @@ class Normalization(Preprocessing):
 
 class MinMaxScaling(Preprocessing):
     def __init__(self, min: float, max: float):
+        if min > max:
+            raise ValueError("min must be less or equal then max! Got min={}, max={}".format(min, max))
+
         super().__init__()
         self.min: float = min
         self.max: float = max
@@ -159,8 +162,8 @@ class MinMaxScaling(Preprocessing):
         self.inputs_max: Tensor = []
 
     def fit(self, inputs: Tensor) -> None:
-        self.inputs_min = inputs.min(axis=0)
-        self.inputs_max = inputs.max(axis=0)
+        self.inputs_min = np.min(inputs, axis=0)
+        self.inputs_max = np.max(inputs, axis=0)
 
     def forward(self, inputs: Tensor) -> Tensor:
         inputs_std = (inputs - self.inputs_min) / (self.inputs_max - self.inputs_min)
