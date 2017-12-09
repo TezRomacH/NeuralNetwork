@@ -1,7 +1,7 @@
 from typing import Sequence
 import numpy as np
 
-from tezromach.layers import Activation, Linear, Sigmoid, Tanh
+from tezromach.layers import Activation, Linear, Sigmoid
 from tezromach.network import NeuralNet
 
 
