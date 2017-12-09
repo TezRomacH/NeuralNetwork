@@ -10,9 +10,6 @@ def create_nn_one_hidden(
         output_size: int,
         activation: Activation = Sigmoid()
 ) -> NeuralNet:
-    if input_size < 0 or output_size < 0:
-        raise Exception
-
     return NeuralNet([
         Linear(input_size=input_size, output_size=input_size),
         activation,

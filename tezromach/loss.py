@@ -16,6 +16,7 @@ class Loss:
 
 class MSE(Loss):
     """
+    Mean squared error is:
     sum( (predicted - y)^2 )
     """
 

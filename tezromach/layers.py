@@ -23,6 +23,7 @@ class Layer:
     def __init__(self) -> None:
         self.params: Dict[str, Tensor] = {}
         self.grads: Dict[str, Tensor] = {}
+        self._params = None
 
     def fit(self, inputs: Tensor) -> None:
         pass
@@ -39,6 +40,15 @@ class Layer:
         """
         raise NotImplementedError
 
+    LAYER_TYPE = None
+
+    def __str__(self):
+        return self.__class__.__name__ + (self._params if self._params else "") + \
+               ((" " + self.LAYER_TYPE) if self.LAYER_TYPE else "") + " layer"
+
+    def __repr__(self):
+        return "<" + str(self) + ">"
+
 
 class Linear(Layer):
     """
@@ -46,14 +56,16 @@ class Linear(Layer):
     """
 
     def __init__(self, input_size: int, output_size: int) -> None:
-        # inputs will be (batch_size, input_size)
-        # outputs will be (batch_size, output_size)
+        if input_size < 0 or output_size < 0:
+            raise ValueError("Both input_size and output_size must be greater or equal then zero!"
+                             " Got input_size={}, output_size={}".format(input_size, output_size))
         super().__init__()
         self.input_size = input_size
         self.output_size = output_size
         self.params["w"] = np.random.randn(input_size, output_size)
         self.params["b"] = np.random.randn(output_size)
         self.inputs: Tensor = []
+        self._params = "(input_size={}, output_size={})".format(self.input_size, self.output_size)
 
     def forward(self, inputs: Tensor) -> Tensor:
         """
@@ -89,6 +101,8 @@ class Activation(Layer):
     An activation layer just applies a function
     elementwise to its inputs
     """
+
+    LAYER_TYPE = "activation"
 
     def __init__(self, f: F, f_deriv: F) -> None:
         super().__init__()
@@ -139,6 +153,7 @@ class Sigmoid(Activation):
 #######     Preprocessing
 
 class Preprocessing(Layer):
+    LAYER_TYPE = "preprocessing"
     pass
 
 
@@ -169,6 +184,7 @@ class MinMaxScaling(Preprocessing):
         self.max: float = max
         self.inputs_min: Tensor = []
         self.inputs_max: Tensor = []
+        self._params = "(min={}, max={})".format(self.min, self.max)
 
     def fit(self, inputs: Tensor) -> None:
         self.inputs_min = np.min(inputs, axis=0)

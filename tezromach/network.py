@@ -39,6 +39,9 @@ class NeuralNet:
         for layer in self.layers:
             layer.fit(inputs)
 
+    def __str__(self):
+        return "NeuralNet, layers: [\n\t" + '\n\t'.join([str(layer) for layer in self.layers]) + "\n]"
+
     def fit(self,
             inputs: Tensor,
             targets: Tensor,
