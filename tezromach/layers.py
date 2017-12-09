@@ -15,6 +15,9 @@ class Layer:
         self.params: Dict[str, Tensor] = {}
         self.grads: Dict[str, Tensor] = {}
 
+    def fit(self, inputs: Tensor) -> None:
+        pass
+
     def forward(self, inputs: Tensor) -> Tensor:
         """
         Produce the outputs corresponding to these inputs
@@ -66,6 +69,8 @@ class Linear(Layer):
         self.grads["w"] = self.inputs.T @ grad
         return grad @ self.params["w"].T
 
+
+#######     Activation
 
 F = Callable[[Tensor], Tensor]
 
@@ -120,3 +125,46 @@ def sigmoid_deriv(x: Tensor) -> Tensor:
 class Sigmoid(Activation):
     def __init__(self):
         super().__init__(sigmoid, sigmoid_deriv)
+
+
+#######     Preprocessing
+
+class Preprocessing(Layer):
+    pass
+
+
+class Normalization(Preprocessing):
+    def __init__(self):
+        super().__init__()
+        self.average: Tensor = []
+        self.std: Tensor = []
+
+    def fit(self, inputs: Tensor) -> None:
+        self.average = np.average(inputs, axis=0)
+        self.std = np.std(inputs, axis=0)
+
+    def forward(self, inputs: Tensor) -> Tensor:
+        return (inputs - self.average) / self.std
+
+    def backward(self, grad: Tensor) -> Tensor:
+        return grad
+
+
+class MinMaxScaling(Preprocessing):
+    def __init__(self, min: float, max: float):
+        super().__init__()
+        self.min: float = min
+        self.max: float = max
+        self.inputs_min: Tensor = []
+        self.inputs_max: Tensor = []
+
+    def fit(self, inputs: Tensor) -> None:
+        self.inputs_min = inputs.min(axis=0)
+        self.inputs_max = inputs.max(axis=0)
+
+    def forward(self, inputs: Tensor) -> Tensor:
+        inputs_std = (inputs - self.inputs_min) / (self.inputs_max - self.inputs_min)
+        return inputs_std * (self.max - self.min) + self.min
+
+    def backward(self, grad: Tensor) -> Tensor:
+        return grad

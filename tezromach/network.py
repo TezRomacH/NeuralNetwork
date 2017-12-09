@@ -8,7 +8,7 @@ import sys
 from tezromach.iterators import DataIterator, BatchIterator
 from tezromach.loss import Loss, MSE
 from tezromach.tensor import Tensor
-from tezromach.layers import Layer
+from tezromach.layers import Layer, Preprocessing
 
 
 class NeuralNet:
@@ -35,6 +35,10 @@ class NeuralNet:
         for param, grad in self._params_and_grads():
             param -= learning_rate * grad
 
+    def _fit_layers(self, inputs: Tensor) -> None:
+        for layer in self.layers:
+            layer.fit(inputs)
+
     def fit(self,
             inputs: Tensor,
             targets: Tensor,
@@ -43,6 +47,8 @@ class NeuralNet:
             loss: Loss = MSE(),
             iterator: DataIterator = BatchIterator(),
             print_debug: bool = False) -> None:
+        self._fit_layers(inputs)
+
         for epoch in range(num_epochs):
             epoch_loss = 0.0
             for batch in iterator(inputs, targets):
