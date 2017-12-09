@@ -8,7 +8,7 @@ import sys
 from tezromach.iterators import DataIterator, BatchIterator
 from tezromach.loss import Loss, MSE
 from tezromach.tensor import Tensor
-from tezromach.layers import Layer, Preprocessing
+from tezromach.layers import Layer
 
 
 class NeuralNet:

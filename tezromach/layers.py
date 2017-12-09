@@ -1,8 +1,17 @@
 """ 
 Layers:
+
 * Linear
-* Tanh Activation
-* Sigmoid Activation
+
+Activation:
+
+* Tanh
+* Sigmoid
+
+Preprocessing
+
+* Normalization
+* MinMaxScaling
 """
 from typing import Dict, Callable
 
