@@ -1,7 +1,7 @@
 """
 A NeuralNet is just a collection of layers
 """
-from typing import Sequence, Iterator, Tuple
+from typing import Sequence, Iterator, Tuple, Optional
 
 import sys
 
@@ -13,7 +13,8 @@ from tezromach.layers import Layer
 
 class NeuralNet:
     def __init__(self, layers: Sequence[Layer]) -> None:
-        self.layers = layers
+        self.layers: Sequence[Layer] = layers
+        self._trained_params: Optional[str] = None
 
     def predict(self, inputs: Tensor) -> Tensor:
         for layer in self.layers:
@@ -40,17 +41,23 @@ class NeuralNet:
             layer.fit(inputs)
 
     def __str__(self):
-        return "NeuralNet, layers: [\n\t" + '\n\t'.join([str(layer) for layer in self.layers]) + "\n]"
+        return "NeuralNet\n" + \
+               (self._trained_params if self._trained_params else "") + \
+               "layers: [\n\t" + '\n\t'.join([str(layer) for layer in self.layers]) + "\n]"
 
     def fit(self,
             inputs: Tensor,
             targets: Tensor,
             learning_rate: float = 0.01,
             num_epochs: int = 1000,
+            epsilon: float = 0,
             loss: Loss = MSE(),
             iterator: DataIterator = BatchIterator(),
             print_debug: bool = False) -> None:
         self._fit_layers(inputs)
+        self._trained_params = None
+        count_epochs: int = 0
+        epoch_loss = 0.0
 
         for epoch in range(num_epochs):
             epoch_loss = 0.0
@@ -62,3 +69,14 @@ class NeuralNet:
                 self._step(learning_rate)
             if print_debug:
                 print(epoch, epoch_loss, file=sys.stderr)
+            if epoch_loss <= epsilon:
+                count_epochs = epoch
+                break
+        else:
+            count_epochs = num_epochs
+
+        self._trained_params = "trained_params:" \
+                               "\n\tlearning_rate: {0}" \
+                               "\n\tnum_epochs: {1}" \
+                               "\n\tloss_function: {2} = {3}\n" \
+            .format(learning_rate, count_epochs, str(loss), epoch_loss)

@@ -13,6 +13,9 @@ class Loss:
     def grad(self, predicted: Tensor, actual: Tensor) -> Tensor:
         raise NotImplementedError
 
+    def __str__(self):
+        return self.__class__.__name__
+
 
 class MSE(Loss):
     """
