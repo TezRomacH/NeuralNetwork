@@ -42,11 +42,11 @@ class Layer:
 
     LAYER_TYPE = None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__class__.__name__ + (self._params if self._params else "") + \
                ((" " + self.LAYER_TYPE) if self.LAYER_TYPE else "") + " layer"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<" + str(self) + ">"
 
 
@@ -66,6 +66,12 @@ class Linear(Layer):
         self.params["b"] = np.random.randn(output_size)
         self.inputs: Tensor = []
         self._params = "(input_size={}, output_size={})".format(self.input_size, self.output_size)
+
+    def fit(self, inputs: Tensor) -> None:  # oblivion
+        self.params["w"] = np.random.randn(self.input_size, self.output_size)
+        self.params["b"] = np.random.randn(self.output_size)
+        self.grads = {}
+        self.inputs: Tensor = []
 
     def forward(self, inputs: Tensor) -> Tensor:
         """

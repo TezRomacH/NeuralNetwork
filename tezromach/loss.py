@@ -6,18 +6,18 @@ import numpy as np
 from tezromach.tensor import Tensor
 
 
-class Loss:
+class LossFunction:
     def loss(self, predicted: Tensor, actual: Tensor) -> float:
         raise NotImplementedError
 
     def grad(self, predicted: Tensor, actual: Tensor) -> Tensor:
         raise NotImplementedError
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__class__.__name__
 
 
-class MSE(Loss):
+class MSE(LossFunction):
     """
     Mean squared error is:
     sum( (predicted - y)^2 )

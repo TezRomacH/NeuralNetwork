@@ -6,7 +6,7 @@ from typing import Sequence, Iterator, Tuple, Optional
 import sys
 
 from tezromach.iterators import DataIterator, BatchIterator
-from tezromach.loss import Loss, MSE
+from tezromach.loss import LossFunction, MSE
 from tezromach.tensor import Tensor
 from tezromach.layers import Layer
 
@@ -40,18 +40,21 @@ class NeuralNet:
         for layer in self.layers:
             layer.fit(inputs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "NeuralNet\n" + \
                (self._trained_params if self._trained_params else "") + \
                "layers: [\n\t" + '\n\t'.join([str(layer) for layer in self.layers]) + "\n]"
+
+    def __repr__(self) -> str:
+        return str(self)
 
     def fit(self,
             inputs: Tensor,
             targets: Tensor,
             learning_rate: float = 0.01,
             num_epochs: int = 1000,
-            epsilon: float = 0,
-            loss: Loss = MSE(),
+            epsilon: float = -1,
+            loss: LossFunction = MSE(),
             iterator: DataIterator = BatchIterator(),
             print_debug: bool = False) -> None:
         self._fit_layers(inputs)

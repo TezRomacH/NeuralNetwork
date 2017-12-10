@@ -30,3 +30,19 @@ class BatchIterator(DataIterator):
             batch_inputs = inputs[start:end]
             batch_targets = targets[start:end]
             yield Batch(batch_inputs, batch_targets)
+
+
+class DataSetIterator(DataIterator):
+    def __init__(self, shuffle: bool = True) -> None:
+        self.shuffle = shuffle
+
+    def __call__(self, inputs: Tensor, targets: Tensor) -> Iterator[Batch]:
+        if self.shuffle:
+            shuffled_index = list(range(inputs.shape[0]))
+            np.random.shuffle(shuffled_index)
+            batch_inputs = inputs[shuffled_index]
+            batch_targets = targets[shuffled_index]
+        else:
+            batch_inputs = inputs
+            batch_targets = targets
+        yield Batch(batch_inputs, batch_targets)
