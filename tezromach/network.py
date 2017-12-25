@@ -4,6 +4,7 @@ A NeuralNet is just a collection of layers
 from typing import Sequence, Iterator, Tuple, Optional
 
 import sys
+import pickle
 
 from tezromach.iterators import DataIterator, BatchIterator
 from tezromach.loss import LossFunction, MSE
@@ -53,7 +54,7 @@ class NeuralNet:
             targets: Tensor,
             learning_rate: float = 0.01,
             num_epochs: int = 1000,
-            epsilon: float = -1,
+            epsilon: Optional[float] = None,
             loss: LossFunction = MSE(),
             iterator: DataIterator = BatchIterator(),
             print_debug: bool = False) -> None:
@@ -72,7 +73,7 @@ class NeuralNet:
                 self._step(learning_rate)
             if print_debug:
                 print(epoch, epoch_loss, file=sys.stderr)
-            if epoch_loss <= epsilon:
+            if epsilon and epoch_loss <= epsilon:
                 count_epochs = epoch
                 break
         else:
@@ -83,3 +84,12 @@ class NeuralNet:
                                "\n\tnum_epochs: {1}" \
                                "\n\tloss_function: {2} = {3}\n" \
             .format(learning_rate, count_epochs, str(loss), epoch_loss)
+
+    def save_model(self, filename: str) -> None:
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
+
+
+def load_model(filename: str) -> NeuralNet:
+    with open(filename, 'rb') as f:
+        return pickle.load(f)
