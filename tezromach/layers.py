@@ -174,7 +174,10 @@ class Normalization(Preprocessing):
         self.std = np.std(inputs, axis=0)
 
     def forward(self, inputs: Tensor) -> Tensor:
-        return (inputs - self.average) / self.std
+        result = (inputs - self.average) / self.std
+        result[np.isnan(result)] = 0
+
+        return result
 
     def backward(self, grad: Tensor) -> Tensor:
         return grad
