@@ -37,4 +37,4 @@ predicted = net.predict(inputs_test)
 predicted = np.argmax(predicted, axis=1)
 targets_test = np.argmax(targets_test, axis=1)
 
-print("Accuracy: ", metrics.accuracy_score(predicted, targets_test))
+print("accuracy metrics: ", metrics.accuracy_score(predicted, targets_test))
