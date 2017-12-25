@@ -57,13 +57,13 @@ class NeuralNet:
             epsilon: Optional[float] = None,
             loss: LossFunction = MSE(),
             iterator: DataIterator = BatchIterator(),
-            print_debug: bool = False) -> None:
+            verbose_print: Optional[int] = None) -> None:
         self._fit_layers(inputs)
         self._trained_params = None
         count_epochs: int = 0
         epoch_loss = 0.0
 
-        for epoch in range(num_epochs):
+        for epoch in range(1, num_epochs + 1):
             epoch_loss = 0.0
             for batch in iterator(inputs, targets):
                 predicted = self.predict(batch.inputs)
@@ -71,8 +71,8 @@ class NeuralNet:
                 grad = loss.grad(predicted, batch.targets)
                 self._backward(grad)
                 self._step(learning_rate)
-            if print_debug:
-                print(epoch, epoch_loss, file=sys.stderr)
+            if verbose_print and epoch % verbose_print == 0:
+                print("{}:\t{} = {}".format(epoch, loss, epoch_loss))
             if epsilon and epoch_loss <= epsilon:
                 count_epochs = epoch
                 break
