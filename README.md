@@ -1,5 +1,16 @@
-### Simple neural network lib
-Use layers with different *Activations*
+### Simple neural network lib for Python 3.6
+Vectorized python implementation of backpropogation with NumPy.
+Use layers with different *Activations*:
+ * Sigmoid
+ * Hyperbolic Tangent (Tanh)
+ 
+ You can add preprocessing layers into your pipeline.
+ Preprocessing:
+  * Normalization, which is
+![normalization](files/CodeCogsEqn.gif?raw=true "Title")
+  * MinMaxScaling
+  
+Loss function is MSE (Mean squared error), You can easily add you own loss. Just inheret it from `LossFunction` class
 ```python
 from tezromach.network import NeuralNet
 from tezromach.layers import Linear, Sigmoid, Tanh, Normalization
@@ -7,11 +18,13 @@ from tezromach.layers import Linear, Sigmoid, Tanh, Normalization
 net = NeuralNet([
     Normalization(), # Preprocessing
 
-    Linear(input_size=2, output_size=3),
+    Linear(input_size=2, output_size=4),
     Tanh(),
-    Linear(input_size=3, output_size=1),
+    Linear(input_size=4, output_size=1),
     Sigmoid()
 ])
 
-net.fit(X, targets, num_epochs=10000, learning_rate=0.02)
+net.fit(inputs, targets, verbose_print=10, num_epochs=200, learning_rate=0.1, epsilon=0.002)
+
+predictions = net.predict(inputs_for_test)
 ```
