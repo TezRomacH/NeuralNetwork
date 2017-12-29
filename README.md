@@ -1,5 +1,5 @@
-### Simple neural network lib for Python 3.6
-Vectorized python implementation of backpropogation with NumPy.
+### Simple neural network for Python 3.6
+Vectorized Python implementation of backpropagation with NumPy.
 Use layers with different *Activations*:
  * Sigmoid
  * Hyperbolic Tangent (Tanh)
