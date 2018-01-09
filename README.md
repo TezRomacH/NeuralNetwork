@@ -19,9 +19,10 @@ net = NeuralNet([
     Normalization(), # Preprocessing
 
     Linear(input_size=2, output_size=4),
-    Tanh(),
+    Tanh(), # Non-linear activation
+    
     Linear(input_size=4, output_size=1),
-    Sigmoid()
+    Sigmoid()  # Non-linear activation
 ])
 
 net.fit(inputs, targets, verbose_print=10, num_epochs=200, learning_rate=0.1, epsilon=0.002)
