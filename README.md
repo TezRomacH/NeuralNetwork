@@ -3,6 +3,7 @@ Vectorized Python implementation of backpropagation with NumPy.
 Use layers with different *Activations*:
  * Sigmoid
  * Hyperbolic Tangent (Tanh)
+ * ReLU
  
  You can add preprocessing layers into your pipeline.
  Preprocessing:

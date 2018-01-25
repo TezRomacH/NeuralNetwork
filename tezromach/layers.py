@@ -156,6 +156,23 @@ class Sigmoid(Activation):
         super().__init__(sigmoid, sigmoid_deriv)
 
 
+def relu(x: Tensor) -> Tensor:
+    return np.maximum(0, x)
+
+
+def relu_deriv(x: Tensor) -> Tensor:
+    result = x.copy()
+    result[result > 0] = 1
+    result[result < 0] = 0
+    return result
+
+
+class ReLU(Activation):
+    def __init__(self):
+        super().__init__(relu, relu_deriv)
+
+
+
 #######     Preprocessing
 
 class Preprocessing(Layer):
