@@ -65,17 +65,23 @@ class NeuralNet:
 
         for epoch in range(1, num_epochs + 1):
             epoch_loss = 0.0
+            num_batches = 0
             for batch in iterator(inputs, targets):
+                num_batches += 1
                 predicted = self.predict(batch.inputs)
                 epoch_loss += loss.loss(predicted, batch.targets)
                 grad = loss.grad(predicted, batch.targets)
                 self._backward(grad)
                 self._step(learning_rate)
-            if verbose_print and epoch % verbose_print == 0:
-                print("{}:\t{} = {}".format(epoch, loss, epoch_loss))
+                
+            if num_batches != 0:
+                epoch_loss = epoch_loss / num_batches
             if epsilon and epoch_loss <= epsilon:
                 count_epochs = epoch
                 break
+                
+            if verbose_print and verbose_print > 0 and epoch % verbose_print == 0:
+                print("{}:\t{} = {}".format(epoch, loss, epoch_loss))
         else:
             count_epochs = num_epochs
 
