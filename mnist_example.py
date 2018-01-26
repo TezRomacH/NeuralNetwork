@@ -32,9 +32,15 @@ print("done fit NeuralNet")
 print(net)
 
 net.save_model("model_mnist")
-predicted = net.predict(inputs_test)
 
+predicted = net.predict(inputs_train)
 predicted = np.argmax(predicted, axis=1)
-targets_test = np.argmax(targets_test, axis=1)
+predicted_targets_train = np.argmax(targets_train, axis=1)
 
-print("accuracy metrics: ", metrics.accuracy_score(predicted, targets_test))
+print("accuracy metrics (train): ", metrics.accuracy_score(predicted, predicted_targets_train))
+
+predicted = net.predict(inputs_test)
+predicted = np.argmax(predicted, axis=1)
+predicted_targets_test = np.argmax(targets_test, axis=1)
+
+print("accuracy metrics (test): ", metrics.accuracy_score(predicted, predicted_targets_test))
