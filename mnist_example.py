@@ -1,4 +1,4 @@
-from tezromach.layers import Normalization, Linear, Tanh, Sigmoid
+from tezromach.layers import Normalization, Linear, Tanh, Sigmoid, ReLU
 from tezromach.network import NeuralNet
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -19,7 +19,7 @@ net = NeuralNet([
     Normalization(),
 
     Linear(input_size=64, output_size=100),
-    Sigmoid(),
+    ReLU(),
     Linear(input_size=100, output_size=80),
     Sigmoid(),
     Linear(input_size=80, output_size=10),
